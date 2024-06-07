@@ -2,3 +2,4 @@ attachments/MOV/*
 attachments/MP4/*
 node_modules/*
 binaries/*.exe
+.env
