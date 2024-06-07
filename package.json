@@ -1,0 +1,24 @@
+{
+  "name": "scribe-dbot",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "rizzntine",
+  "license": "ISC",
+  "description": "A typescript handler for a discord bot - now only used to convert .mov files to .mp4 for convenience.",
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.3",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "tsx": "^4.12.0"
+  }
+}
