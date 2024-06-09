@@ -33,6 +33,40 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
     
     const attachments = message.attachments;
+
+    const content = message.content;
+    const regex = /https:\/\/.*\.mov/g;
+    const matches = content.match(regex);
+
+    if(matches)
+        for (const [key, match] of matches) {
+            const url = new URL(match, 'https://cdn.discordapp.com');
+            const fileName = url.pathname.split('/').pop() as string;
+            const filePath = path.join(__dirname, '..', 'attachments', 'mov', fileName);
+            const fileUrl = new URL(url.toString(),'https://cdn.discordapp.com');
+            try {
+                const response = await fetch(fileUrl.toString());
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const buffer = await response.arrayBuffer();
+                const dataView = new DataView(buffer);
+                fs.writeFileSync(filePath, Buffer.from(dataView.buffer));
+                console.log(`File written: ${filePath}`);
+
+                message.channel.send(`Converting...`);
+                const outputPath = await convertMOVtoMP4(fileName);
+                await message.channel.send({
+                    content: `Here is your converted file:`,
+                    files: [outputPath]
+                });
+            } catch (err) {
+                console.error(`Failed to process file: ${err}`);
+                message.channel.send(`Failed to convert. Oopsie Daisies`);
+                //CURRENTLY THE BOT WILL ALWAYS RETURN 403 FORBIDDEN DUE TO SAFETY RESTIRCTIONS
+                //TODO: WORKAROUND
+            }
+        }
     if (!attachments.size) return;
 
     for (const [key, value] of attachments) {
